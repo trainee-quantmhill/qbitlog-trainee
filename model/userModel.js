@@ -20,13 +20,12 @@ const logsSchema = new mongoose.Schema({
         type:String,
     },
     createdBy:{
-        type:String,
-        ref:"userSignup",
-
-    }
+        type:mongoose.Types.ObjectId,
+        ref:"usersignups",
+    },
 })
 
 
-const currentLogs = mongoose.model('currentLogs',logsSchema);
+const currentLogsModel = mongoose.model('currentLogsModel',logsSchema);
 
-export default currentLogs;
+export default currentLogsModel;

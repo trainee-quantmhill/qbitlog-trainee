@@ -26,7 +26,7 @@ const signupSchema = new mongoose.Schema({
 //jwt TOKEN.createJWT is a userdefined method 
 signupSchema.methods.createJWT = function () {
     return JWT.sign(
-        {userEmail : this.email},
+        {userId : this._id},
         process.env.JWT_SECRET,
         {expiresIn : "1d"},
     )
