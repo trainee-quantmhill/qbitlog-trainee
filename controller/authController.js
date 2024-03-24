@@ -19,14 +19,23 @@ export const signUp = async (req, res) => {
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new Signup({ email, password: hashedPassword, confirmPassword: hashedPassword });
 
-        // const newUser = new Signup({ email, password, confirmPassword });
+        //create user
+        const user = await Signup.create({ email, password: hashedPassword, confirmPassword: hashedPassword });
 
-        // Save the user to the database
-        await newUser.save();
+        //create token
+        const token = await user.createJWT();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).send({
+            success:true,
+            message:"User Created Sucessfully",
+            user:{
+                email:user.email,
+            },
+            token
+        })
+
+        // res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -37,13 +46,12 @@ export const signUp = async (req, res) => {
 //login
 export const login = async (req, res) => {
     const existEmail = req.body.email;
-    console.log(existEmail);
     const userEnteredPassword = req.body.password;
 
     try {
         // Find the user by email
         const existingUser = await Signup.findOne({ email: existEmail });
-        console.log(existingUser)
+        
         if (!existingUser) {
             // User does not exist
             return res.status(404).json({ message: "User does not exist" });
@@ -51,20 +59,32 @@ export const login = async (req, res) => {
 
         const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
 
-        if (passwordMatch) {
-            // Passwords match, login successful
-            return res.status(200).json({ message: 'Login successful' });
-        } else {
-            // Invalid password
-            return res.status(401).json({ error: 'Invalid password' });
+        if(!passwordMatch){
+            return res.status(401).json({error:"Invalid Username or Password"});
         }
+
+        const token = await existingUser.createJWT();
+
+        res.status(200).json({
+            success:true,
+            message:'Login Successfull',
+            user:{
+                email:existingUser.email
+            },
+            token
+        })
+        // if (passwordMatch) {
+        //     // Passwords match, login successful
+        //     return res.status(200).json({ message: 'Login successful' });
+        // } else {
+        //     // Invalid password
+        //     return res.status(401).json({ error: 'Invalid password' });
+        // }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
-
 
 let generatedOtp;
 let userEmail;
@@ -106,7 +126,7 @@ export const sendMail = async (req, res) => {
             }
             else {
                 res.status(200).json({ message: "Email send sucessfully and OTP will be valid for 2 minutes" })
-                
+
             }
         })
     } catch (error) {
@@ -160,9 +180,9 @@ export const changePassword = async (req, res) => {
             await userObject.save();
             res.status(200).json({ message: 'Password updated successfully' })
             console.log('Password updated successfully');
-            isTrue=false;
-        }else{
-            res.status(500).json({message:'your Email is not verified.Verify your Email'});
+            isTrue = false;
+        } else {
+            res.status(500).json({ message: 'your Email is not verified.Verify your Email' });
         }
     } catch (error) {
         console.error('Error updating password:', error.message);

@@ -1,16 +1,22 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import cors  from 'cors';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 
 //components
-import  signUp  from './routes/auth.js';
-import  login  from './routes/auth.js';
-import sendOtp from './routes/auth.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import Connection from './database/dbConnection.js';
 
 
+//config dotenv
+dotenv.config();
+
+//rest object
 const app = express();
+
+// It is use to run of frontend and backend on same server
 app.use(cors());
 
 app.use(bodyParser.json({ extended: true }));
@@ -18,11 +24,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-app.use('/', signUp);
-app.use('/', login);
-app.use('/', sendOtp);
+app.use('/api', authRoutes);
+app.use('/api/user',userRoutes);
 
-const PORT = 8000;
+
+const PORT = process.env.PORT || 8000;
 
 Connection();
 app.listen(PORT, () => console.log(`Server is running successfully on PORT ${PORT}`));

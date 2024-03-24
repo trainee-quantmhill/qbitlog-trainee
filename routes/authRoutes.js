@@ -1,7 +1,6 @@
 
 import express from 'express';
-import passport from 'passport';
-import {Strategy as passportLocal} from 'passport-local'
+
 
 const router = express.Router();
 
