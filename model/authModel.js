@@ -1,6 +1,8 @@
 
 import mongoose from "mongoose"
 import JWT from 'jsonwebtoken'
+
+
 const signupSchema = new mongoose.Schema({
     email: {
         type: String,

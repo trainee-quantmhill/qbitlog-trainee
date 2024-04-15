@@ -2,88 +2,32 @@ import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 
 
-//comsponents
-import { Signup } from "../model/authModel.js";
+//components
+
+import { _signUp ,_login} from '../service/authService.js';
 
 //signup
 export const signUp = async (req, res) => {
-    const { email, password, confirmPassword } = req.body;
-
     try {
-        // Check if user with the provided email already exists
-        const existingUser = await Signup.findOne({ email });
-
-        if (existingUser) {
-            return res.status(409).json({ error: 'User with this email already exists' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        //create user
-        const user = await Signup.create({ email, password: hashedPassword, confirmPassword: hashedPassword });
-
-        //create token
-        const token = await user.createJWT();
-
-        res.status(201).send({
-            success:true,
-            message:"User Created Sucessfully",
-            user:{
-                email:user.email,
-            },
-            token
-        })
-
-        // res.status(201).json({ message: 'User registered successfully' });
+        const result = await _signUp(req.body)
+        res.status(200).json(result);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({message:"An error occurred while processing the request"});
     }
 };
 
 
 //login
 export const login = async (req, res) => {
+   try{
     const existEmail = req.body.email;
     const userEnteredPassword = req.body.password;
-
-    try {
-        // Find the user by email
-        const existingUser = await Signup.findOne({ email: existEmail });
-        
-        if (!existingUser) {
-            // User does not exist
-            return res.status(404).json({ message: "User does not exist" });
-        }
-
-        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
-
-        if(!passwordMatch){
-            return res.status(401).json({error:"Invalid Username or Password"});
-        }
-
-        const token = await existingUser.createJWT();
-
-        res.status(200).json({
-            success:true,
-            message:'Login Successfull',
-            user:{
-                email:existingUser.email
-            },
-            token
-        })
-        // if (passwordMatch) {
-        //     // Passwords match, login successful
-        //     return res.status(200).json({ message: 'Login successful' });
-        // } else {
-        //     // Invalid password
-        //     return res.status(401).json({ error: 'Invalid password' });
-        // }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    const result = await _login(existEmail,userEnteredPassword);
+    res.status(200).json(result);
+   }catch(err){
+    return res.status(500).json({message:"An error occurred while processing the request"});
+   }
+    
 };
 
 let generatedOtp;

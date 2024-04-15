@@ -15,6 +15,8 @@ router.post('/add-log',userAuth,addLog);
 
 //update Log
 router.patch('/update-log/:id',userAuth,updateLog);
+
+//delete Log
 router.delete('/delete-log/:id',userAuth,deleteLog);
 
 

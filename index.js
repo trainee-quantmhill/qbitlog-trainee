@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import Connection from './database/dbConnection.js';
-
+import allLogRoutes from './routes/allLogRoutes.js';
 
 //config dotenv
 dotenv.config();
@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api', authRoutes);
 app.use('/api/user',userRoutes);
+app.use('/api/user',allLogRoutes);
 
 
 const PORT = process.env.PORT || 8000;

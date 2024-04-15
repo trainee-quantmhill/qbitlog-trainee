@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const logsSchema = new mongoose.Schema({
+const allLogsSchema = new mongoose.Schema({
     logDate : {
         type:String,
     },
@@ -35,6 +35,6 @@ const logsSchema = new mongoose.Schema({
 })
 
 
-const currentLogsModel = mongoose.model('currentLogsModel',logsSchema);
+const allLogsModel = mongoose.model('allLogsModel',allLogsSchema);
 
-export default currentLogsModel;
+export default allLogsModel;
