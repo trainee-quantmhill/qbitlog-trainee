@@ -7,10 +7,17 @@ export const _addLog = async (body, userId) => {
         console.log("body:", body);
         const { logDate,logYear,logMonth, logHour, logMin, logType, projectName, logDescription } = body;
 
+        //find year
+        let arr;
+        arr =logDate.split('-');
+        logYear = arr[2];
+        logMonth =arr[1];
+        
         //validation
-        if (!logDate || !logYear || !logMonth || !logHour || !logMin || !logType || !projectName || !logDescription) {
+        if (!logDate ||  !logHour  || !logYear || !logMin || !logType || !projectName || !logDescription) {
             throw new ErrorHandler('All Fields Are Required');
         }
+        
         body.createdBy = userId;
         const log = await currentLogsModel.create(body);
 
