@@ -5,29 +5,41 @@ import currentLogsModel from '../model/userModel.js';
 export const _addLog = async (body, userId) => {
     try {
         console.log("body:", body);
-        const {  logHour,logDate,logDescription,logType, logMin, projectName } = body;
+
+        const { logHour, logDate, logDescription, logType, logMin, projectName } = body;
 
         // Find year and month
-        let arr;
-        arr = logDate.split('-');
-        let logYear = arr[2];   
-        let logMonth = arr[1];  
-        
+        const arr = logDate.split('-');
+        const logYear = arr[2];   
+        const logMonth = arr[1];  
+
+        // Add logYear and logMonth properties to the body object
+        body.logYear = logYear;
+        body.logMonth = logMonth;
+
         console.log("logYear:", logYear);
         console.log("logMonth:", logMonth);
-        
-       
-        
+
+        // Validation
+        if (!logDate || !logHour || !logYear || !logMin || !logType || !projectName || !logDescription) {
+            throw new ErrorHandler('All Fields Are Required');
+        }
+
+        // Add createdBy field to the body
         body.createdBy = userId;
         console.log("userId:", userId);
+
+        console.log(body);
+        // Create log entry in the database
         const log = await currentLogsModel.create(body);
 
         return log;
     } catch (err) {
         console.log("Catch error:", err);
-        return { status: err.status || 500, message: err.message || "Internal Server Error" }
+        return { status: err.status || 500, message: err.message || "Internal Server Error" };
     }
 }
+
 
 
 
