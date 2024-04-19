@@ -31,8 +31,15 @@ export const _addLog = async (body, userId) => {
 // ==================Update Log ==================
 export const _updateLog = async (id, body, userId) => {
     try {
-        const { logDate,logYear,logMonth, logHour, logMin, logType, projectName, logDescription } = body;
+        const { logDate, logHour, logMin, logType, projectName, logDescription } = body;
 
+        //find year
+        let arr;
+        arr =logDate.split('-');
+        logYear = arr[2];
+        logMonth =arr[1];
+
+        
         //validation
         if (!logDate || !logYear || !logMonth || !logHour || !logMin || !logType || !projectName || !logDescription) {
             throw new ErrorHandler('All  Fields Are required');
