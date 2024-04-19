@@ -29,6 +29,7 @@ export const _addLog = async (body, userId) => {
         console.log(body);
         // Create log entry in the database
         const log = await currentLogsModel.create(body);
+      
 
         return log;
     } catch (err) {
@@ -102,6 +103,19 @@ export const _deleteLog = async (id,userId) => {
         await log.deleteOne();
         return { message: 'Log Deleted Sucessfully' };
     } catch (err) {
+        return { status: err.status || 500, message: err.message || "Internal Server Error " }
+    }
+}
+
+//
+export const _fetchLog = async()=>{
+    try{
+        const logs=await currentLogsModel.find();
+        if(!logs){
+            throw new ErrorHandler("NO logs found ");
+        }
+        return logs;
+    }catch(err){
         return { status: err.status || 500, message: err.message || "Internal Server Error " }
     }
 }

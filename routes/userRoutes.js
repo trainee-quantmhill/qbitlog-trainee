@@ -2,7 +2,7 @@ import express from 'express';
 
 //components
 import userAuth from '../middleware/userAuth.js'; //Middleware
-import { addLog , updateLog ,deleteLog} from '../controller/userController.js';
+import { addLog , updateLog ,deleteLog,fetchLog} from '../controller/userController.js';
 
 
 
@@ -18,6 +18,9 @@ router.patch('/update-log/:id',userAuth,updateLog);
 
 //delete Log
 router.delete('/delete-log/:id',userAuth,deleteLog);
+
+//fetch logs
+router.get('/fetch-log',fetchLog);
 
 
 
