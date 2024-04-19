@@ -5,7 +5,7 @@ import currentLogsModel from '../model/userModel.js';
 export const _addLog = async (body, userId) => {
     try {
         console.log("body:", body);
-        const { logDate, logHour, logMin, logType, projectName, logDescription } = body;
+        const {  logHour,logDate,logDescription,logType, logMin, projectName } = body;
 
         // Find year and month
         let arr;
