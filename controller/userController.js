@@ -5,10 +5,12 @@ import currentLogsModel from '../model/userModel.js';
 // ===========Add Log=================
 export const addLog = async (req, res) => {
     try {
+        console.log(req.body);
         const log = await _addLog(req.body, req.user.userId);
         
         res.status(200).json(log);
     } catch (err) {
+        console.log("catch error in controlller ");
         return res.status(500).json({message:"An error occurred while processing the request"});
     }
 }
