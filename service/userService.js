@@ -16,10 +16,7 @@ export const _addLog = async (body, userId) => {
         console.log("logYear:", logYear);
         console.log("logMonth:", logMonth);
         
-        // Validation
-        if (!logDate || !logHour  ||  !logYear || !logMin || !logType || !projectName || !logDescription) {
-            throw new ErrorHandler('All Fields Are Required');
-        }
+       
         
         body.createdBy = userId;
         console.log("userId:", userId);
