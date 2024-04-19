@@ -10,14 +10,14 @@ export const _addLog = async (body, userId) => {
         // Find year and month
         let arr;
         arr = logDate.split('-');
-        let logYear = arr[2];  // Use let instead of const
-        let logMonth = arr[1]; // Use let instead of const
+        let logYear = arr[2];   
+        let logMonth = arr[1];  
         
         console.log("logYear:", logYear);
         console.log("logMonth:", logMonth);
         
         // Validation
-        if (!logDate || !logHour || !logYear || !logMin || !logType || !projectName || !logDescription) {
+        if (!logDate || !logHour  ||  !logYear || !logMin || !logType || !projectName || !logDescription) {
             throw new ErrorHandler('All Fields Are Required');
         }
         
