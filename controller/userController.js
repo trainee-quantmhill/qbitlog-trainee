@@ -1,6 +1,5 @@
 
 import { _addLog , _updateLog} from '../service/userService.js';
-import currentLogsModel from '../model/userModel.js';
 
 // ===========Add Log=================
 export const addLog = async (req, res) => {
