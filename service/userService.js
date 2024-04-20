@@ -6,37 +6,38 @@ export const _addLog = async (body, userId) => {
     try {
         console.log("body:", body);
 
-        const { logHour, logDate, logDescription, logType, logMin, projectName } = body;
+        const { logDate } = body;
 
         // Find year and month
         const arr = logDate.split('-');
         const logYear = arr[2];   
         const logMonth = arr[1];  
 
-        // Add logYear and logMonth properties to the body object
-        body.logYear = logYear;
-        body.logMonth = logMonth;
-
         console.log("logYear:", logYear);
         console.log("logMonth:", logMonth);
 
-        // Validation
-    
-        // Add createdBy field to the body
-        body.createdBy = userId;
+        // Create a new object with additional properties
+        const newBody = {
+            ...body,
+            logYear: logYear,
+            logMonth: logMonth,
+            createdBy: userId
+        };
+
         console.log("userId:", userId);
 
-        console.log(body);
+        console.log(newBody);
+        
         // Create log entry in the database
-        const log = await currentLogsModel.create(body);
+        const log = await currentLogsModel.create(newBody);
       
-
         return log;
     } catch (err) {
         console.log("Catch error:", err);
         return { status: err.status || 500, message: err.message || "Internal Server Error" };
     }
 }
+
 
 
 
