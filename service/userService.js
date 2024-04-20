@@ -108,15 +108,15 @@ export const _deleteLog = async (id,userId) => {
     }
 }
 
-//
-export const _fetchLog = async()=>{
-    try{
-        const logs=await currentLogsModel.find();
-        if(!logs){
-            throw new ErrorHandler("NO logs found ");
+
+export const _fetchLog = async (createdBYId) => {
+    try {
+        const logs = await currentLogsModel.find({ createdBy: createdBYId });
+        if (!logs || logs.length === 0) {
+            throw new ErrorHandler("No logs found for the specified user");
         }
         return logs;
-    }catch(err){
-        return { status: err.status || 500, message: err.message || "Internal Server Error " }
+    } catch (err) {
+        return { status: err.status || 500, message: err.message || "Internal Server Error" };
     }
 }

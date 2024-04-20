@@ -12,8 +12,7 @@ const logsSchema = new mongoose.Schema({
     },
     logHour: {
         type:String,
-    },
-   
+    },  
     logMin:{
         type:String,
     },  

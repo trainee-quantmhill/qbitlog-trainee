@@ -20,7 +20,7 @@ router.patch('/update-log/:id',userAuth,updateLog);
 router.delete('/delete-log/:id',userAuth,deleteLog);
 
 //fetch logs
-router.get('/fetch-log',fetchLog);
+router.get('/fetch-log',userAuth,fetchLog);
 
 
 

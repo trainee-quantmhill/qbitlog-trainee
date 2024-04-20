@@ -43,7 +43,10 @@ export const deleteLog = async (req, res) => {
 //
 export const fetchLog = async(req,res)=>{
     try{
-        const log = await _fetchLog();
+        console.log("dkjshd");
+        const id = "660d350329b4184a19bb3533";
+        console.log(id);
+        const log = await _fetchLog(id);
         res.status(200).json(log);
     }catch(err){
         return res.status(500).json({message:"An error occurred while processing the request"})
