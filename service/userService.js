@@ -53,7 +53,7 @@ export const _updateLog = async (id, body, userId) => {
         body.logMonth = logMonth;
 
         // Validate required fields
-        if (!logDate || !logYear || !logMonth || !hours || !minutes || !logType || !project || !logDescription) {
+        if (!logDate ||  !hours || !minutes || !logType || !project || !logDescription) {
             throw new ErrorHandler('All fields are required');
         }
 
