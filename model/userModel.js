@@ -4,28 +4,29 @@ const logsSchema = new mongoose.Schema({
     logDate : {
         type:String,
     },
-    logYear:{
-        type:String,
-    },
-    logMonth:{
-        type:String,
-    },
-    logHour: {
-        type:String,
-    },
-    logWeek:{
-        type:String,
-    },
-    logMin:{
-        type:String,
-    },
     logType:{
         type:String,
     },
     projectName:{
         type:String,
     },
+    logHour: {
+        type:String,
+    },
+   
+    logMin:{
+        type:String,
+    },  
     logDescription:{
+        type:String,
+    },
+    logYear:{
+        type:String,
+    },
+    logMonth:{
+        type:String,
+    },
+    logWeek:{
         type:String,
     },
     createdBy:{
