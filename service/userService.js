@@ -43,7 +43,7 @@ export const _addLog = async (body, userId) => {
 // ==================Update Log ==================
 export const _updateLog = async (id, body, userId) => {
     try {
-        const { logDate, logHour, logMin, logType, projectName, logDescription } = body;
+        const { logDate, logType,project,hours, minutes, logDescription } = body;
 
         // Find year and month
         const [logYear, logMonth] = logDate.split('-').slice(0, 2);
@@ -53,7 +53,7 @@ export const _updateLog = async (id, body, userId) => {
         body.logMonth = logMonth;
 
         // Validate required fields
-        if (!logDate || !logYear || !logMonth || !logHour || !logMin || !logType || !projectName || !logDescription) {
+        if (!logDate || !logYear || !logMonth || !hours || !minutes || !logType || !project || !logDescription) {
             throw new ErrorHandler('All fields are required');
         }
 
