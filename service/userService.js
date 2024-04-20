@@ -40,8 +40,6 @@ export const _addLog = async (body, userId) => {
 
 
 
-
-
 // ==================Update Log ==================
 export const _updateLog = async (id, body, userId) => {
     try {
