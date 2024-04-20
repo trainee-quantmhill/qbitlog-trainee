@@ -91,6 +91,7 @@ export const _deleteLog = async (id,userId) => {
     try {
         const log = await currentLogsModel.findOne({ _id: id });
 
+        console.log("log",log);
         //validation
         if (!log) {
             throw new ErrorHandler('log not found with this id' );
@@ -98,7 +99,7 @@ export const _deleteLog = async (id,userId) => {
 
         //validation
         if (userId !== log.createdBy.toString()) {
-            throw new ErrorHandler( "You are not authorized to Update this Job" );
+            throw new ErrorHandler( "You are not authorized to delete this Job" );
         }
 
         await log.deleteOne();
