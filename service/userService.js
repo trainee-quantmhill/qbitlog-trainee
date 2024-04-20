@@ -45,42 +45,42 @@ export const _updateLog = async (id, body, userId) => {
     try {
         const { logDate, logHour, logMin, logType, projectName, logDescription } = body;
 
-        //find year
-        let arr;
-        arr =logDate.split('-');
-        let logYear = arr[2];
-        let logMonth =arr[1];
+        // Find year and month
+        const [logYear, logMonth] = logDate.split('-').slice(0, 2);
+
+        // Add logYear and logMonth properties to the body object
+        body.logYear = logYear;
+        body.logMonth = logMonth;
+
+        // Validate required fields
+        if (!logDate || !logYear || !logMonth || !logHour || !logMin || !logType || !projectName || !logDescription) {
+            throw new ErrorHandler('All fields are required');
+        }
+
+        // Find the log by ID
+        const log = await currentLogsModel.findById(id);
 
         
-          // Add logYear and logMonth properties to the body object
-          body.logYear = logYear;
-          body.logMonth = logMonth;
-  
-          console.log("logYear:", logYear);
-          console.log("logMonth:", logMonth);
-
-        //validation
-        if (!logDate || !logYear || !logMonth || !logHour || !logMin || !logType || !projectName || !logDescription) {
-            throw new ErrorHandler('All  Fields Are required');
-        }
-
-        const log = await currentLogsModel.findOne({ _id: id })
-
-        //validation
-        if (userId !== log.createdBy.toString()) {
-            throw new ErrorHandler("You are not authorized to Update this Job");
-        }
-
+        console.log(log);
+        // Check if the log exists
         if (!log) {
-            throw new ErrorHandler( "No Logs Found with this Id" );
+            throw new ErrorHandler('No logs found with this ID');
         }
 
+        // Check if the user is authorized to update the log
+        if (userId !== log.createdBy?.toString()) {
+            throw new ErrorHandler('You are not authorized to update this log');
+        }
+
+        // Update the log
         const updateLog = await currentLogsModel.findOneAndUpdate({ _id: id }, body, { new: true, runValidators: true });
         return updateLog;
     } catch (err) {
-        return { status: err.status || 500, message: err.message || "Internal Server Error " }
+        console.error(err); // Log the error for debugging
+        return { status: err.status || 500, message: err.message || 'Internal Server Error' };
     }
-}
+};
+
 
 
 //===================Delete Log ==============

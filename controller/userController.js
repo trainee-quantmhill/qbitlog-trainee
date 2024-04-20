@@ -19,11 +19,11 @@ export const addLog = async (req, res) => {
 // ==================Update Log ==================
 export const updateLog = async (req, res) => {
     try {
-        const {id}= req.params.id;
-        const log = await _updateLog(id,req.body,req.user.userId);
+        const { id } = req.params; // Corrected destructuring
+        const log = await _updateLog(id, req.body, req.user.userId);
         res.status(200).json(log);        
     } catch (err) {
-        return res.status(500).json({message:"An error occurred while processing the request"})
+        return res.status(500).json({ message: "An error occurred while processing the request" });
     }
 }
 
