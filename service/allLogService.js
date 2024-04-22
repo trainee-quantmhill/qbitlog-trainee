@@ -27,27 +27,27 @@ export const _submitLog = async () => {
 //===================filter   all Logs==============
 export const _allLogs = async (query, user) => {
     try {
-        const { logYear, logMonth, logWeek, logDate } = query;
+        const { year, month, week, date } = query;
 
-        console.log(logYear)
+         
         //conditions for searching filters
         const queryObject = { createdBy: user.userId };
 
 
         //logic filter
-        if (logYear && logYear !== "all") {
-            queryObject.logYear = logYear;
+        if (year && year !== "all") {
+            queryObject.year = year;
         }
-        if (logMonth && logMonth !== "all") {
-            queryObject.logMonth = logMonth;
+        if (month && month !== "all") {
+            queryObject.month = month;
         }
         
 
-        if (logWeek && logWeek !== "all") {
-            queryObject.logWeek = logWeek;            
+        if (week && week !== "all") {
+            queryObject.week = week;            
         }
-        if (logDate && logDate !== "all") {
-            queryObject.logDate = logDate;            
+        if (date && date !== "all") {
+            queryObject.logDate = date;            
         }
 
         let queryResult = allLogsModel.find(queryObject);

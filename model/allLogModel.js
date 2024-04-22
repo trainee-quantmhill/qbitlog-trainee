@@ -19,13 +19,13 @@ const allLogsSchema = new mongoose.Schema({
     logDescription:{
         type:String,
     },
-    logYear:{
+    year:{
         type:String,
     },
-    logMonth:{
+    month:{
         type:String,
     },
-    logWeek:{
+    week:{
         type:String,
     },
     createdBy:{
