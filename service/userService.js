@@ -4,33 +4,43 @@ import currentLogsModel from '../model/userModel.js';
 // ===========Add Log=================
 export const _addLog = async (body, userId) => {
     try {
-        console.log("body:", body);
-
         const { logDate } = body;
 
         // Find year and month
         const arr = logDate.split('-');
-        const logYear = arr[2];   
-        const logMonth = arr[1];  
 
-        console.log("logYear:", logYear);
-        console.log("logMonth:", logMonth);
+        //find Year and Month and Week
+        const logYear = arr[2];
+
+        const month = { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" };
+        const logMonth = month[parseInt(arr[1])];
+
+        let logWeek = parseInt(arr[0]);
+
+        if (logWeek > 0 && logWeek < 8) {
+            logWeek = "Week 1";
+        } else if (logWeek >= 8 && logWeek < 15) {
+            logWeek = "Week 2";
+        } else if (logWeek >= 15 && logWeek < 22) {
+            logWeek = "Week 3";
+        } else if (logWeek >= 22 && logWeek < 29) {
+            logWeek = "Week 4";
+        }
+
+        console.log(logWeek);
 
         // Create a new object with additional properties
         const newBody = {
             ...body,
             logYear: logYear,
             logMonth: logMonth,
+            logWeek: logWeek,
             createdBy: userId
         };
 
-        console.log("userId:", userId);
-
-        console.log(newBody);
-        
         // Create log entry in the database
         const log = await currentLogsModel.create(newBody);
-      
+
         return log;
     } catch (err) {
         console.log("Catch error:", err);
@@ -43,24 +53,33 @@ export const _addLog = async (body, userId) => {
 // ==================Update Log ==================
 export const _updateLog = async (id, body, userId) => {
     try {
-        const { logDate, logType,project,hours, minutes, logDescription } = body;
+        const { logDate, logType, project, hours, minutes, logDescription } = body;
 
         // Find year and month
         const [logYear, logMonth] = logDate.split('-').slice(0, 2);
 
-        // Add logYear and logMonth properties to the body object
+        // Convert logMonth to the full month name
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+
+        const fullMonthName = monthNames[parseInt(logMonth) - 1]; // Subtract 1 to match array index
+
+
+
+        // Add logYear and fullMonthName properties to the body object
         body.logYear = logYear;
-        body.logMonth = logMonth;
+        body.logMonth = fullMonthName;
+
 
         // Validate required fields
-        if (!logDate ||  !hours || !minutes || !logType || !project || !logDescription) {
+        if (!logDate || !hours || !minutes || !logType || !project || !logDescription) {
             throw new ErrorHandler('All fields are required');
         }
 
         // Find the log by ID
         const log = await currentLogsModel.findById(id);
 
-        
+
         console.log(log);
         // Check if the log exists
         if (!log) {
@@ -85,19 +104,19 @@ export const _updateLog = async (id, body, userId) => {
 
 //===================Delete Log ==============
 
-export const _deleteLog = async (id,userId) => {
+export const _deleteLog = async (id, userId) => {
     try {
         const log = await currentLogsModel.findOne({ _id: id });
 
-        console.log("log",log);
+
         //validation
         if (!log) {
-            throw new ErrorHandler('log not found with this id' );
+            throw new ErrorHandler('log not found with this id');
         }
 
         //validation
         if (userId !== log.createdBy.toString()) {
-            throw new ErrorHandler( "You are not authorized to delete this Job" );
+            throw new ErrorHandler("You are not authorized to delete this Job");
         }
 
         await log.deleteOne();
