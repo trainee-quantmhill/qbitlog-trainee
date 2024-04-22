@@ -53,10 +53,8 @@ export const _allLogs = async (query,user) => {
 
         const logs = await queryResult;
 
-        return {
-            totalLogs,
-            logs,
-        }
+        return logs
+        
     } catch (err) {
         return { status: err.status || 500, message: err.message || "Internal server error " };
     }
