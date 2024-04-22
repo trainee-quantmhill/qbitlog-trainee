@@ -76,7 +76,7 @@ function getWeekFromDate(monthName, dayOfMonth) {
     const weekNumber = getISOWeek(date);
 
     // Check if the week number is within the range of 1 to 8
-    if (weekNumber >= 1 && weekNumber <= 8) {
+    if (weekNumber >= 1 && weekNumber <= 6) {
         return weekNumber;
     } else {
         // If the week number is outside the range, calculate the week number based on the first day of the month
