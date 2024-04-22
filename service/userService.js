@@ -1,40 +1,40 @@
 import ErrorHandler from "../utils/errorHandler.js";
 import currentLogsModel from '../model/userModel.js';
+import { parse, getISOWeek } from 'date-fns'; // Import necessary functions from date-fns
 
 // ===========Add Log=================
 export const _addLog = async (body, userId) => {
     try {
         const { logDate } = body;
 
+         
         // Find year and month
         const arr = logDate.split('-');
 
-        //find Year and Month and Week
+        //find Year 
         const logYear = arr[2];
-
+        
+        //Find Month
         const month = { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" };
         const logMonth = month[parseInt(arr[1])];
 
-        let logWeek = parseInt(arr[0]);
+        //Find date 
+        const date  = arr[0];
 
-        if (logWeek > 0 && logWeek < 8) {
-            logWeek = "Week 1";
-        } else if (logWeek >= 8 && logWeek < 15) {
-            logWeek = "Week 2";
-        } else if (logWeek >= 15 && logWeek < 22) {
-            logWeek = "Week 3";
-        } else if (logWeek >= 22 && logWeek < 29) {
-            logWeek = "Week 4";
-        }
+        console.log("Date",date);
+        let week = getWeekFromDate(logMonth, date);
+        console.log("Week:", week);
 
-        console.log(logWeek);
-
+        const finalWeek = `Week ${week}`;
+        console.log(finalWeek);
+        
+        
         // Create a new object with additional properties
         const newBody = {
             ...body,
             logYear: logYear,
             logMonth: logMonth,
-            logWeek: logWeek,
+            logWeek: finalWeek,
             createdBy: userId
         };
 
@@ -55,8 +55,10 @@ export const _updateLog = async (id, body, userId) => {
     try {
         const { logDate, logType, project, hours, minutes, logDescription } = body;
 
-        // Find year and month
-        const [logYear, logMonth] = logDate.split('-').slice(0, 2);
+         // Find year and month
+         const arr = logDate.split('-');
+        const logYear= arr[2];
+        const logMonth= arr[1];
 
         // Convert logMonth to the full month name
         const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -64,12 +66,13 @@ export const _updateLog = async (id, body, userId) => {
 
         const fullMonthName = monthNames[parseInt(logMonth) - 1]; // Subtract 1 to match array index
 
-
-
+        let week = getWeekFromDate(fullMonthName, arr[0]);
+        const finalWeek = `Week ${week}`;
+        console.log(week);
         // Add logYear and fullMonthName properties to the body object
         body.logYear = logYear;
         body.logMonth = fullMonthName;
-
+        body.logWeek = finalWeek;
 
         // Validate required fields
         if (!logDate || !hours || !minutes || !logType || !project || !logDescription) {
@@ -136,5 +139,30 @@ export const _fetchLog = async (createdBYId) => {
         return logs;
     } catch (err) {
         return { status: err.status || 500, message: err.message || "Internal Server Error" };
+    }
+}
+
+
+function getWeekFromDate(monthName, dayOfMonth) {
+    // Parse the month name to get the month number (0-based index)
+    const month = parse(monthName, 'MMMM', new Date());
+
+    // Create a new Date object with the specified month and day
+    const date = new Date(new Date().getFullYear(), month.getMonth(), dayOfMonth);
+
+    // Get the week of the year
+    const weekNumber = getISOWeek(date);
+
+    // Check if the week number is within the range of 1 to 8
+    if (weekNumber >= 1 && weekNumber <= 8) {
+        return weekNumber;
+    } else {
+        // If the week number is outside the range, calculate the week number based on the first day of the month
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const firstWeekNumber = getISOWeek(firstDayOfMonth);
+        const weekNumberInMonth = weekNumber - firstWeekNumber + 1;
+
+        // Return the calculated week number within the range of 1 to 8
+        return weekNumberInMonth >= 1 && weekNumberInMonth <= 8 ? weekNumberInMonth : null;
     }
 }
