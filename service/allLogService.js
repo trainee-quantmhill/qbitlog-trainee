@@ -28,6 +28,7 @@ export const _allLogs = async (query,user) => {
     try {
         const { logYear,logMonth,logWeek,logDate} =  query;
 
+        console.log(logYear)
         //conditions for searching filters
         const queryObject = { createdBy:  user.userId };
          
@@ -53,8 +54,10 @@ export const _allLogs = async (query,user) => {
 
         const logs = await queryResult;
 
-        return logs
-        
+        return {
+            
+            logs
+        }
     } catch (err) {
         return { status: err.status || 500, message: err.message || "Internal server error " };
     }

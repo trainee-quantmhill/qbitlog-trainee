@@ -17,8 +17,8 @@ export const submitLog = async(req,res)=>{
 //====================Filter All Logs ==================
  
 export const allLogs = async(req,res)=>{
-    try{
-         
+    try{       
+        console.log(req.query);
         const result = await _allLogs(req.query,req.user);
         res.status(200).json(result);
     }catch(err){
