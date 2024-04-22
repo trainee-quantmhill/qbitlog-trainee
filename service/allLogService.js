@@ -9,7 +9,7 @@ export const _submitLog = async () => {
     try {
         const allLogs = await currentLogsModel.find();
 
-        console.log("allLogs",allLogs);
+
         // Save fetched documents into the target collection
         await allLogsModel.insertMany(allLogs);
 
@@ -41,6 +41,7 @@ export const _allLogs = async (query, user) => {
         if (logMonth && logMonth !== "all") {
             queryObject.logMonth = logMonth;
         }
+        
 
         if (logWeek && logWeek !== "all") {
             queryObject.logWeek = logWeek;            
@@ -57,34 +58,9 @@ export const _allLogs = async (query, user) => {
         const logs = await queryResult;
 
         return {
-
             logs
         }
     } catch (err) {
         return { status: err.status || 500, message: err.message || "Internal server error " };
-    }
-}
-
-function getWeekFromDate(monthName, dayOfMonth) {
-    // Parse the month name to get the month number (0-based index)
-    const month = parse(monthName, 'MMMM', new Date());
-
-    // Create a new Date object with the specified month and day
-    const date = new Date(new Date().getFullYear(), month.getMonth(), dayOfMonth);
-
-    // Get the week of the year
-    const weekNumber = getISOWeek(date);
-
-    // Check if the week number is within the range of 1 to 8
-    if (weekNumber >= 1 && weekNumber <= 6) {
-        return weekNumber;
-    } else {
-        // If the week number is outside the range, calculate the week number based on the first day of the month
-        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        const firstWeekNumber = getISOWeek(firstDayOfMonth);
-        const weekNumberInMonth = weekNumber - firstWeekNumber + 1;
-
-        // Return the calculated week number within the range of 1 to 8
-        return weekNumberInMonth >= 1 && weekNumberInMonth <= 8 ? weekNumberInMonth : null;
     }
 }

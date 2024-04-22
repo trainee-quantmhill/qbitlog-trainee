@@ -35,6 +35,7 @@ signupSchema.methods.createJWT = function () {
 }
 
 
+
 const Signup = mongoose.model('userSignup', signupSchema)
 
 

@@ -12,14 +12,14 @@ export const _addLog = async (body, userId) => {
         const arr = logDate.split('-');
 
         //find Year 
-        const logYear = arr[2];
+        const logYear = arr[0];
         
         //Find Month
         const month = { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" };
         const logMonth = month[parseInt(arr[1])];
 
         //Find date 
-        const date  = arr[0];
+        const date  = arr[2];
 
         console.log("Date",date);
         let week = getWeekFromDate(logMonth, date);
@@ -57,7 +57,7 @@ export const _updateLog = async (id, body, userId) => {
 
          // Find year and month
          const arr = logDate.split('-');
-        const logYear= arr[2];
+        const logYear= arr[0];
         const logMonth= arr[1];
 
         // Convert logMonth to the full month name
@@ -66,7 +66,7 @@ export const _updateLog = async (id, body, userId) => {
 
         const fullMonthName = monthNames[parseInt(logMonth) - 1]; // Subtract 1 to match array index
 
-        let week = getWeekFromDate(fullMonthName, arr[0]);
+        let week = getWeekFromDate(fullMonthName, arr[2]);
         const finalWeek = `Week ${week}`;
         console.log(week);
         // Add logYear and fullMonthName properties to the body object

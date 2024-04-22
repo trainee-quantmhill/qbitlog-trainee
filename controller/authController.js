@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
-
+import  {Signup } from '../model/authModel.js';
 
 //components
 
@@ -108,10 +108,9 @@ export const changePassword = async (req, res) => {
     try {
         if (isTrue === true) {
             const userObject = await Signup.findOne({ email: userEmail });
-            console.log(userObject);
+            
             const { password, confirmPassword } = req.body;
-            console.log(password);
-            console.log(confirmPassword);
+             
             if (password !== confirmPassword) {
                 return res.status(400).json({ message: 'Passwords do not match' });
             }
@@ -120,19 +119,27 @@ export const changePassword = async (req, res) => {
             userObject.password = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
-            console.log(password);
+             
             await userObject.save();
             res.status(200).json({ message: 'Password updated successfully' })
-            console.log('Password updated successfully');
+             
             isTrue = false;
         } else {
             res.status(500).json({ message: 'your Email is not verified.Verify your Email' });
         }
     } catch (error) {
-        console.error('Error updating password:', error.message);
+         
         res.status(500).json({ message: error.message })
     }
 
+}
+
+export const  logOut = async(req,res)=>{
+    try{
+        
+    }catch(err){
+
+    }
 }
 
 
