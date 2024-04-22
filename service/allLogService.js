@@ -45,9 +45,9 @@ export const _allLogs = async (query, user) => {
         if (logWeek && logWeek !== "all") {
             queryObject.logWeek = logWeek;            
         }
-        // if (logDate && logDate !== "all") {
-        //     queryObject.logDate = logDate;            
-        // }
+        if (logDate && logDate !== "all") {
+            queryObject.logDate = logDate;            
+        }
 
         let queryResult = allLogsModel.find(queryObject);
 
