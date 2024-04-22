@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const allLogsSchema = new mongoose.Schema({
+const logsSchema = new mongoose.Schema({
     logDate : {
         type:String,
     },
@@ -19,13 +19,13 @@ const allLogsSchema = new mongoose.Schema({
     logDescription:{
         type:String,
     },
-    year:{
+    logYear:{
         type:String,
     },
-    month:{
+    logMonth:{
         type:String,
     },
-    week:{
+    logWeek:{
         type:String,
     },
     createdBy:{
@@ -35,6 +35,6 @@ const allLogsSchema = new mongoose.Schema({
 })
 
 
-const allLogsModel = mongoose.model('allLogsModel',allLogsSchema);
+const currentLogsModel = mongoose.model('allLogsModel',logsSchema);
 
-export default allLogsModel;
+export default currentLogsModel;
