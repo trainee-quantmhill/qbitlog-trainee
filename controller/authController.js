@@ -11,6 +11,9 @@ import ErrorHandler from '../utils/errorHandler.js';
 export const signUp = async (req, res) => {
     try {
         console.log(req.body)
+        const userEnteredPassword = req.body.newPassword;
+        console.log("entered Password",userEnteredPassword);
+        
         const result = await _signUp(req.body)
         res.status(200).json(result);
     } catch (error) {
