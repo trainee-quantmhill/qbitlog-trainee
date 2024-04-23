@@ -119,13 +119,19 @@ export const changePassword = async (req, res) => {
         if (isTrue === true) {
             const userObject = await Signup.findOne({ email: userEmail });
             
+            console.log("userObject",userObject)
             const { password, confirmPassword } = req.body;
              
-            if (password !== confirmPassword) {
+            console.log("password",password);
+            console.log("confirmPassword",confirmPassword);
+
+            if (password != confirmPassword) {
                 return res.status(400).json({ message: 'Passwords do not match' });
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
+            
+            console.log("hashedPassword",hashedPassword);
             userObject.password = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
