@@ -9,7 +9,7 @@ import { _signUp ,_login} from '../service/authService.js';
 //signup
 export const signUp = async (req, res) => {
     try {
-        console.log(req.body);
+        console.log(req.body)
         const result = await _signUp(req.body)
         res.status(200).json(result);
     } catch (error) {

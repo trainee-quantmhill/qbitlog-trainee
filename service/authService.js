@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 
 //components
 import { Signup } from "../model/authModel.js";
-
+import ErrorHandler from '../utils/errorHandler.js';
 
 
 export const _signUp = async (body) => {
@@ -13,35 +13,37 @@ export const _signUp = async (body) => {
 
         // Check if user with the provided email already exists
         const existingUser = await Signup.findOne({ email });
-
-        if (existingUser) {
-            
+        console.log("existUser ",existingUser);
+        if (existingUser) {          
             throw new ErrorHandler('User with this email already exists');
         }
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
+        console.log("Hashed Password:", hashedPassword);
 
-        //create user
+        // Create user
         const user = await Signup.create({ email, newPassword: hashedPassword, confirmPassword: hashedPassword });
+        
+        console.log("User Created:", user);
 
-        //create token
+        // Create token
         const token = await user.createJWT();
 
         return {
-            success:true,
-            message:"User Created Sucessfully",
-            user:{
-                email:user.email,
+            success: true,
+            message: "User Created Successfully",
+            user: {
+                email: user.email,
             },
             token
-        }
-        
+        };
+    } catch (err) {
+        console.error(err);
+        throw new ErrorHandler('Internal Server Error', 500);
     }
-    catch(err){
-        
-    }
-}
+};
+
 
 
 export const _login = async (existEmail, userEnteredPassword) => {
