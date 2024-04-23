@@ -120,20 +120,20 @@ export const changePassword = async (req, res) => {
             
             console.log("Body",req.body);
             console.log("userObject",userObject)
-            const { password, confirmPassword } = req.body;
+            const { newPassword, confirmPassword } = req.body;
              
-            console.log("password",password);
+            console.log("password",newPassword);
             console.log("confirmPassword",confirmPassword);
 
-            if (password != confirmPassword) {
+            if (newPassword != confirmPassword) {
                 return res.status(400).json({ message: 'Passwords do not match' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
             
             console.log("hashedPassword",hashedPassword);
 
-            userObject.password = hashedPassword;
+            userObject.newPassword = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
              

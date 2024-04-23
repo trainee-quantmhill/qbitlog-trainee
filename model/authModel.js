@@ -9,7 +9,7 @@ const signupSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    password: {
+    newPassword: {
         type: String,
         required: true,
         unique: true,
