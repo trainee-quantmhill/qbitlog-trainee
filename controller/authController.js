@@ -118,6 +118,7 @@ export const changePassword = async (req, res) => {
         if (isTrue === true) {
             const userObject = await Signup.findOne({ email: userEmail });
             
+            console.log("Body",req.body);
             console.log("userObject",userObject)
             const { password, confirmPassword } = req.body;
              
