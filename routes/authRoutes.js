@@ -17,7 +17,7 @@ router.post('/get-otp',sendMail);
 
 router.post('/confirm-otp',verifyEmail);
 
-router.patch('/change-password',userAuth,changePassword);
+router.patch('/change-password', changePassword);
 
 router.get('/logout',userAuth,logOut);
 

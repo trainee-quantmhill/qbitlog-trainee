@@ -84,7 +84,7 @@ export const sendMail = async (req, res) => {
 //verify email
 export const verifyEmail = async (req, res) => {
     try {
-        const enteredOtp = req.body.otp;
+        const enteredOtp = parseInt(req.body.otp);
 
         console.log("Type of entered ",typeof enteredOtp);
 
@@ -114,7 +114,6 @@ export const verifyEmail = async (req, res) => {
 
 //change password 
 export const changePassword = async (req, res) => {
-
     try {
         if (isTrue === true) {
             const userObject = await Signup.findOne({ email: userEmail });
@@ -125,13 +124,12 @@ export const changePassword = async (req, res) => {
             console.log("password",password);
             console.log("confirmPassword",confirmPassword);
 
-            if (password != confirmPassword) {
-                return res.status(400).json({ message: 'Passwords do not match' });
-            }
+             
 
             const hashedPassword = await bcrypt.hash(password, 10);
             
             console.log("hashedPassword",hashedPassword);
+
             userObject.password = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
