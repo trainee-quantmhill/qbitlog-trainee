@@ -67,8 +67,8 @@ export const _updateLog = async (id, body, userId) => {
         const fullMonthName = monthNames[parseInt(logMonth) - 1]; // Subtract 1 to match array index
 
         let week = getWeekFromDate(fullMonthName, arr[2]);
-        const finalWeek = `Week ${week}`;
-        console.log(week);
+        const finalWeek = `Week${week}`;
+        console.log("finalWeek",finalWeek);
         // Add logYear and fullMonthName properties to the body object
         body.logYear = logYear;
         body.logMonth = fullMonthName;
