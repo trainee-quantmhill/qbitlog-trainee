@@ -98,7 +98,7 @@ export const verifyEmail = async (req, res) => {
             return res.status(401).json({ message: "OTP expired" });
         }
 
-        if (enteredOtp == generatedOtp) {
+        if (enteredOtp === generatedOtp) {
             isTrue = true;
             res.status(200).json({ message: "Verification successful" });
         } else {
@@ -124,7 +124,9 @@ export const changePassword = async (req, res) => {
             console.log("password",password);
             console.log("confirmPassword",confirmPassword);
 
-             
+            if (password != confirmPassword) {
+                return res.status(400).json({ message: 'Passwords do not match' });
+            }
 
             const hashedPassword = await bcrypt.hash(password, 10);
             
