@@ -9,6 +9,7 @@ import { _signUp ,_login} from '../service/authService.js';
 //signup
 export const signUp = async (req, res) => {
     try {
+        console.log(req.body);
         const result = await _signUp(req.body)
         res.status(200).json(result);
     } catch (error) {
@@ -20,8 +21,10 @@ export const signUp = async (req, res) => {
 //login
 export const login = async (req, res) => {
    try{
+    console.log("sndkjsadcb");
     const existEmail = req.body.email;
-    const userEnteredPassword = req.body.password;
+    const userEnteredPassword = req.body.newPassword;
+    console.log(userEnteredPassword);
     const result = await _login(existEmail,userEnteredPassword);
     res.status(200).json(result);
    }catch(err){

@@ -9,7 +9,7 @@ import { Signup } from "../model/authModel.js";
 
 export const _signUp = async (body) => {
     try {
-        const { email, password, confirmPassword } = body;
+        const { email, newPassword, confirmPassword } = body;
 
         // Check if user with the provided email already exists
         const existingUser = await Signup.findOne({ email });
@@ -20,10 +20,10 @@ export const _signUp = async (body) => {
         }
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         //create user
-        const user = await Signup.create({ email, password: hashedPassword, confirmPassword: hashedPassword });
+        const user = await Signup.create({ email, newPassword: hashedPassword, confirmPassword: hashedPassword });
 
         //create token
         const token = await user.createJWT();
@@ -44,35 +44,36 @@ export const _signUp = async (body) => {
 }
 
 
-export const _login = async(existEmail,userEnteredPassword)=>{
+export const _login = async (existEmail, userEnteredPassword) => {
     try {
         // Find the user by email
         const existingUser = await Signup.findOne({ email: existEmail });
-        
-        if(!existingUser) {
-            // User does not exist
-            return res.status(404).json({ message: "User does not exist" });
-        }
-        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
-        
+        console.log(existingUser);
 
-        if(!passwordMatch){
-            throw new ErrorHandler("Invalid Username or Password" );
+        if (!existingUser) {
+            // User does not exist
+            throw new ErrorHandler("User does not exist", 404);
+        }
+        
+        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.newPassword);
+        console.log("passmathc",passwordMatch);
+        
+        if (!passwordMatch) {
+            throw new ErrorHandler("Invalid Username or Password", 401);
         }
 
         const token = await existingUser.createJWT();
 
         return {
-            success:true,
-            message:'Login Successfull',
-            user:{
-                email:existingUser.email
+            success: true,
+            message: 'Login Successful',
+            user: {
+                email: existingUser.email
             },
             token
-        }
-         
+        };
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        throw new ErrorHandler('Internal Server Error', 500);
     }
-}
+};
