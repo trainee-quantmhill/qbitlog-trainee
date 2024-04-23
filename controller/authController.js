@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
-import  {Signup } from '../model/authModel.js';
+import { Signup } from '../model/authModel.js';
 
 //components
 
-import { _signUp ,_login} from '../service/authService.js';
-
+import { _signUp, _login } from '../service/authService.js';
+import ErrorHandler from '../utils/errorHandler.js';
 //signup
 export const signUp = async (req, res) => {
     try {
@@ -13,24 +13,24 @@ export const signUp = async (req, res) => {
         const result = await _signUp(req.body)
         res.status(200).json(result);
     } catch (error) {
-        return res.status(500).json({message:"An error occurred while processing the request"});
+        return res.status(500).json({ message: "An error occurred while processing the request" });
     }
 };
 
 
 //login
 export const login = async (req, res) => {
-   try{
-    console.log("sndkjsadcb");
-    const existEmail = req.body.email;
-    const userEnteredPassword = req.body.newPassword;
-    console.log(userEnteredPassword);
-    const result = await _login(existEmail,userEnteredPassword);
-    res.status(200).json(result);
-   }catch(err){
-    return res.status(500).json({message:"An error occurred while processing the request"});
-   }
-    
+    try {
+        console.log("sndkjsadcb");
+        const existEmail = req.body.email;
+        const userEnteredPassword = req.body.newPassword;
+        console.log(userEnteredPassword);
+        const result = await _login(existEmail, userEnteredPassword);
+        res.status(200).json(result);
+    } catch (err) {
+        return res.status(500).json({ message: "An error occurred while processing the request" });
+    }
+
 };
 
 let generatedOtp;
@@ -89,13 +89,13 @@ export const verifyEmail = async (req, res) => {
     try {
         const enteredOtp = parseInt(req.body.otp);
 
-        console.log("Type of entered ",typeof enteredOtp);
+        console.log("Type of entered ", typeof enteredOtp);
 
-        console.log("Type of entered ",typeof generatedOtp);
+        console.log("Type of entered ", typeof generatedOtp);
 
 
-        console.log("enteredOtp",enteredOtp);
-        console.log("generatedOtp",generatedOtp);
+        console.log("enteredOtp", enteredOtp);
+        console.log("generatedOtp", generatedOtp);
         if (Date.now() - otpTimestamp > otpExpirationTime) {
             console.log("OTP expired");
             return res.status(401).json({ message: "OTP expired" });
@@ -120,51 +120,81 @@ export const changePassword = async (req, res) => {
     try {
         if (isTrue === true) {
             const userObject = await Signup.findOne({ email: userEmail });
-            
-            console.log("Body",req.body);
-            console.log("userObject",userObject)
+
+            if (!userObject) {
+                res.status(401).json("User does not exist with this email id ")
+            }
+            console.log("Body", req.body);
+            console.log("userObject", userObject)
             const { newPassword, confirmPassword } = req.body;
-             
-            console.log("password",newPassword);
-            console.log("confirmPassword",confirmPassword);
+
+            console.log("password", newPassword);
+            console.log("confirmPassword", confirmPassword);
 
             if (newPassword != confirmPassword) {
                 return res.status(400).json({ message: 'Passwords do not match' });
             }
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-            
-            console.log("hashedPassword",hashedPassword);
+
+            console.log("hashedPassword", hashedPassword);
 
             userObject.newPassword = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
-             
+
             await userObject.save();
             res.status(200).json({ message: 'Password updated successfully' })
-             
+
             isTrue = false;
         } else {
             res.status(500).json({ message: 'your Email is not verified.Verify your Email' });
         }
     } catch (error) {
-         
         res.status(500).json({ message: error.message })
     }
 
 }
 
 
+//updatePassword
+export const updatePassword = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const userObject = await Signup.findOne(userId);
+
+        if (!userObject) {
+            res.status(401).json("User does not exist with this   id ")
+        }
+
+        const { newPassword, confirmPassword } = req.body;
+
+        if (newPassword != confirmPassword) {
+            return res.status(400).json({ message: 'Passwords do not match' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        userObject.newPassword = hashedPassword;
+        userObject.confirmPassword = hashedPassword;
+
+        await userObject.save();
+        res.status(200).json({ message: 'Password updated successfully' })
+    } catch (err) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 // Logout 
-export const  logOut = async(req,res)=>{
-    try{
+export const logOut = async (req, res) => {
+    try {
         userId = req.user.userId;
         const existUser = await Signup.findById(userId);
-        if(!existUser){
+        if (!existUser) {
             res.status(401).json("User NOt Found With  This ID");
         }
         existUser.toke
-    }catch(err){
+    } catch (err) {
 
     }
 }
