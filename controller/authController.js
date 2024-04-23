@@ -85,6 +85,12 @@ export const sendMail = async (req, res) => {
 export const verifyEmail = async (req, res) => {
     try {
         const enteredOtp = req.body.otp;
+
+        console.log("Type of entered ",typeof enteredOtp);
+
+        console.log("Type of entered ",typeof generatedOtp);
+
+
         console.log("enteredOtp",enteredOtp);
         console.log("generatedOtp",generatedOtp);
         if (Date.now() - otpTimestamp > otpExpirationTime) {
@@ -104,6 +110,7 @@ export const verifyEmail = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 //change password 
 export const changePassword = async (req, res) => {
@@ -137,12 +144,20 @@ export const changePassword = async (req, res) => {
 
 }
 
+
+// Logout 
 export const  logOut = async(req,res)=>{
     try{
-        
+        userId = req.user.userId;
+        const existUser = await Signup.findById(userId);
+        if(!existUser){
+            res.status(401).json("User NOt Found With  This ID");
+        }
+        existUser.toke
     }catch(err){
 
     }
 }
+
 
 
