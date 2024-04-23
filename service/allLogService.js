@@ -29,10 +29,18 @@ export const _allLogs = async (query, user) => {
     try {
         const { logYear, logMonth, logWeek, logDate } = query;
 
-        console.log(logYear)
+        console.log("logyear", logYear);
         //conditions for searching filters
         const queryObject = { createdBy: user.userId };
 
+        let logWeekInNumber = null;
+        if (logWeek) {
+            const logWeekValue = logWeek.split(':')[1];
+            if (logWeekValue) {
+                logWeekInNumber = parseInt(logWeekValue.trim(), 10);
+                console.log("logWeekInNumber", logWeekInNumber);
+            }
+        }
 
         //logic filter
         if (logYear && logYear !== "all") {
@@ -41,13 +49,12 @@ export const _allLogs = async (query, user) => {
         if (logMonth && logMonth !== "all") {
             queryObject.logMonth = logMonth;
         }
-        
 
-        if (logWeek && logWeek !== "all") {
-            queryObject.logWeek = logWeek;            
+        if (logWeekInNumber !== null && logWeekInNumber !== "all") {
+            queryObject.logWeek = logWeekInNumber;
         }
         if (logDate && logDate !== "all") {
-            queryObject.logDate = logDate;            
+            queryObject.logDate = logDate;
         }
 
         let queryResult = allLogsModel.find(queryObject);
@@ -64,3 +71,4 @@ export const _allLogs = async (query, user) => {
         return { status: err.status || 500, message: err.message || "Internal server error " };
     }
 }
+
