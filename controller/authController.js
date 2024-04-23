@@ -35,6 +35,7 @@ let userEmail;
 let isTrue;
 let otpTimestamp;
 let otpExpirationTime = 2 * 60 * 1000;
+
 // send email
 export const sendMail = async (req, res) => {
     try {
@@ -46,6 +47,7 @@ export const sendMail = async (req, res) => {
         const toEmail = user.email;
         userEmail = toEmail;
 
+        //Generate Otp
         const otp = Math.floor(1000 + Math.random() * 9000);
         generatedOtp = otp;
         otpTimestamp = Date.now();//generated time of otp
@@ -83,7 +85,8 @@ export const sendMail = async (req, res) => {
 export const verifyEmail = async (req, res) => {
     try {
         const enteredOtp = req.body.otp;
-
+        console.log("enteredOtp",enteredOtp);
+        console.log("generatedOtp",generatedOtp);
         if (Date.now() - otpTimestamp > otpExpirationTime) {
             console.log("OTP expired");
             return res.status(401).json({ message: "OTP expired" });
