@@ -29,43 +29,33 @@ export const _allLogs = async (query, user) => {
     try {
         const { logYear, logMonth, logWeek, logDate } = query;
 
-        console.log("logyear", logYear);
-        // Conditions for searching filters
+        console.log("logyear",logYear);
+        console.log("logMonth",logMonth);
+        console.log("logWeek",logWeek);
+        console.log("logDate",logDate);
+        //conditions for searching filters
         const queryObject = { createdBy: user.userId };
 
-        let logWeekInNumber = null;
-        // if (logWeek) {
-        //     const logWeekValue = logWeek.split(':')[1];
-        //     if (logWeekValue) {
-        //         const trimmedLogWeekValue = logWeekValue.trim();
-        //         if (!isNaN(trimmedLogWeekValue) && trimmedLogWeekValue !== "all") {
-        //             logWeekInNumber = parseInt(trimmedLogWeekValue, 10);
-        //             console.log("logWeekInNumber", logWeekInNumber);
-        //         }
-        //     }
-        // }
 
-       
-        // Logic filter
+        //logic filter
         if (logYear && logYear !== "all") {
             queryObject.logYear = logYear;
         }
         if (logMonth && logMonth !== "all") {
             queryObject.logMonth = logMonth;
         }
+        
 
-        // Check if logWeekInNumber is a valid number
-        if (logWeek !== null) {
-            queryObject.logWeek = logWeek;
+        if (logWeek && logWeek !== "all") {
+            queryObject.logWeek = logWeek;            
         }
-
         if (logDate && logDate !== "all") {
-            queryObject.logDate = logDate;
+            queryObject.logDate = logDate;            
         }
 
         let queryResult = allLogsModel.find(queryObject);
 
-        // Count logs
+        //count log
         const totalLogs = await allLogsModel.countDocuments(queryResult);
 
         const logs = await queryResult;
@@ -77,7 +67,3 @@ export const _allLogs = async (query, user) => {
         return { status: err.status || 500, message: err.message || "Internal server error " };
     }
 }
-
-
-
-
