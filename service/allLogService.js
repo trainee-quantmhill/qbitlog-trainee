@@ -30,19 +30,23 @@ export const _allLogs = async (query, user) => {
         const { logYear, logMonth, logWeek, logDate } = query;
 
         console.log("logyear", logYear);
-        //conditions for searching filters
+        // Conditions for searching filters
         const queryObject = { createdBy: user.userId };
 
         let logWeekInNumber = null;
-        if (logWeek) {
-            const logWeekValue = logWeek.split(':')[1];
-            if (logWeekValue) {
-                logWeekInNumber = parseInt(logWeekValue.trim(), 10);
-                console.log("logWeekInNumber", logWeekInNumber);
-            }
-        }
+        // if (logWeek) {
+        //     const logWeekValue = logWeek.split(':')[1];
+        //     if (logWeekValue) {
+        //         const trimmedLogWeekValue = logWeekValue.trim();
+        //         if (!isNaN(trimmedLogWeekValue) && trimmedLogWeekValue !== "all") {
+        //             logWeekInNumber = parseInt(trimmedLogWeekValue, 10);
+        //             console.log("logWeekInNumber", logWeekInNumber);
+        //         }
+        //     }
+        // }
 
-        //logic filter
+       
+        // Logic filter
         if (logYear && logYear !== "all") {
             queryObject.logYear = logYear;
         }
@@ -50,16 +54,18 @@ export const _allLogs = async (query, user) => {
             queryObject.logMonth = logMonth;
         }
 
-        if (logWeekInNumber !== null && logWeekInNumber !== "all") {
-            queryObject.logWeek = logWeekInNumber;
+        // Check if logWeekInNumber is a valid number
+        if (logWeek !== null) {
+            queryObject.logWeek = logWeek;
         }
+
         if (logDate && logDate !== "all") {
             queryObject.logDate = logDate;
         }
 
         let queryResult = allLogsModel.find(queryObject);
 
-        //count log
+        // Count logs
         const totalLogs = await allLogsModel.countDocuments(queryResult);
 
         const logs = await queryResult;
@@ -71,4 +77,7 @@ export const _allLogs = async (query, user) => {
         return { status: err.status || 500, message: err.message || "Internal server error " };
     }
 }
+
+
+
 
