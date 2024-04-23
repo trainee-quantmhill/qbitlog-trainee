@@ -6,6 +6,7 @@ import { Signup } from '../model/authModel.js';
 
 import { _signUp, _login } from '../service/authService.js';
 import ErrorHandler from '../utils/errorHandler.js';
+
 //signup
 export const signUp = async (req, res) => {
     try {
@@ -21,14 +22,14 @@ export const signUp = async (req, res) => {
 //login
 export const login = async (req, res) => {
     try {
-        console.log("sndkjsadcb");
+        console.log("loginBody",req.body);
         const existEmail = req.body.email;
         const userEnteredPassword = req.body.newPassword;
-        console.log(userEnteredPassword);
+        console.log("entered Password",userEnteredPassword);
         const result = await _login(existEmail, userEnteredPassword);
         res.status(200).json(result);
     } catch (err) {
-        return res.status(500).json({ message: "An error occurred while processing the request" });
+        return res.status(500).json({ message: err.message });
     }
 
 };

@@ -45,7 +45,7 @@ export const deleteLog = async (req, res) => {
 export const fetchLog = async(req,res)=>{
     try{
         const id = req.user.userId;
-        
+        console.log("id ",id);
         const log = await _fetchLog(id);
         res.status(200).json(log);
     }catch(err){

@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 //components
 import { Signup } from "../model/authModel.js";
 import ErrorHandler from '../utils/errorHandler.js';
+import { updatePassword } from '../controller/authController.js';
 
 
 export const _signUp = async (body) => {
@@ -15,7 +16,7 @@ export const _signUp = async (body) => {
         const existingUser = await Signup.findOne({ email });
         console.log("existUser ",existingUser);
         if (existingUser) {          
-            throw new ErrorHandler('User with this email already exists');
+            return {message:'User with this email already exists'};
         }
 
         // Hash the password
@@ -53,15 +54,15 @@ export const _login = async (existEmail, userEnteredPassword) => {
         console.log(existingUser);
 
         if (!existingUser) {
-            // User does not exist
-            throw new ErrorHandler("User does not exist", 404);
+            return {message:'User with this email does not  exists'};
         }
-        
+        console.log(updatePassword)
+        console.log(existingUser.newPassword)
         const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.newPassword);
         console.log("passmathc",passwordMatch);
         
         if (!passwordMatch) {
-            throw new ErrorHandler("Invalid Username or Password", 401);
+            return {message:"Invalid Username or Password"};
         }
 
         const token = await existingUser.createJWT();
