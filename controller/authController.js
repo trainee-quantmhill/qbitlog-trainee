@@ -25,14 +25,16 @@ export const signUp = async (req, res) => {
 //login
 export const login = async (req, res) => {
     try {
-        console.log("loginBody", req.body);
+         
         const existEmail = req.body.email;
         const userEnteredPassword = req.body.password;
+        
         console.log("entered Password", userEnteredPassword);
         const result = await _login(existEmail, userEnteredPassword);
         res.status(200).json(result);
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        console.error(err.message);
+            res.status(err.status || 500).json({ error: err.message || "Server Error" });
     }
 
 };
@@ -205,7 +207,7 @@ export const logOut = async (req, res) => {
         if (!existUser) {
             res.status(401).json("User NOt Found With  This ID");
         }
-        existUser.toke
+         
     } catch (err) {
 
     }

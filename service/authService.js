@@ -53,20 +53,20 @@ export const _login = async (existEmail, userEnteredPassword) => {
     try {
         // Find the user by email
         const existingUser = await Signup.findOne({ email: existEmail });
-        console.log(existingUser);
 
         if (!existingUser) {
-            return {message:'User with this email does not  exists'};
+            throw new ErrorHandler("User with this email does not exist", 401);
         }
-         
-        console.log(existingUser.password)
-        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
-        console.log("passmathc",passwordMatch);
         
+        // Compare the entered password with the stored password hash
+        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
+        
+        console.log('passmatch',passwordMatch);
         if (!passwordMatch) {
-            throw new ErrorHandler("User Exist With This Email",401)
+            throw new ErrorHandler("Incorrect password", 401);
         }
 
+        // Create JWT token for the authenticated user
         const token = await existingUser.createJWT();
 
         return {
@@ -78,7 +78,10 @@ export const _login = async (existEmail, userEnteredPassword) => {
             token
         };
     } catch (error) {
-        console.error(error);
-        throw new ErrorHandler('Internal Server Error', 500);
+        // Log the error for debugging
+        console.error("Login error:", error);
+
+        // Re-throw the error to be caught by the calling function
+        throw error;
     }
 };
