@@ -9,9 +9,12 @@ const signupSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    password:{
+        type:String,
+        required:true,
+    },
     newPassword: {
-        type: String,  
-        required: true,      
+        type: String,       
     },
     confirmPassword: {
         type: String,

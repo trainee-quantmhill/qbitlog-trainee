@@ -10,7 +10,7 @@ import { updatePassword } from '../controller/authController.js';
 
 export const _signUp = async (body) => {
     try {
-        const { email, newPassword, confirmPassword } = body;
+        const { email,password, newPassword, confirmPassword } = body;
 
         // Check if user with the provided email already exists
         const existingUser = await Signup.findOne({ email });
@@ -19,12 +19,13 @@ export const _signUp = async (body) => {
             return {message:'User with this email already exists'};
         }
 
+        console.log("password",password)
         // Hash the password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
         console.log("Hashed Password:", hashedPassword);
 
         // Create user
-        const user = await Signup.create({ email, newPassword: hashedPassword, confirmPassword: hashedPassword });
+        const user = await Signup.create({ email,password:hashedPassword, newPassword: hashedPassword, confirmPassword: hashedPassword });
         
         console.log("User Created:", user);
 
@@ -56,9 +57,9 @@ export const _login = async (existEmail, userEnteredPassword) => {
         if (!existingUser) {
             return {message:'User with this email does not  exists'};
         }
-        console.log(updatePassword)
-        console.log(existingUser.newPassword)
-        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.newPassword);
+         
+        console.log(existingUser.password)
+        const passwordMatch = await bcrypt.compare(userEnteredPassword, existingUser.password);
         console.log("passmathc",passwordMatch);
         
         if (!passwordMatch) {

@@ -11,9 +11,9 @@ import ErrorHandler from '../utils/errorHandler.js';
 export const signUp = async (req, res) => {
     try {
         console.log(req.body)
-        const userEnteredPassword = req.body.newPassword;
-        console.log("entered Password",userEnteredPassword);
-        
+        const userEnteredPassword = req.body.password;
+        console.log("entered Password", userEnteredPassword);
+
         const result = await _signUp(req.body)
         res.status(200).json(result);
     } catch (error) {
@@ -25,10 +25,10 @@ export const signUp = async (req, res) => {
 //login
 export const login = async (req, res) => {
     try {
-        console.log("loginBody",req.body);
+        console.log("loginBody", req.body);
         const existEmail = req.body.email;
-        const userEnteredPassword = req.body.newPassword;
-        console.log("entered Password",userEnteredPassword);
+        const userEnteredPassword = req.body.password;
+        console.log("entered Password", userEnteredPassword);
         const result = await _login(existEmail, userEnteredPassword);
         res.status(200).json(result);
     } catch (err) {
@@ -142,7 +142,7 @@ export const changePassword = async (req, res) => {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
 
             console.log("hashedPassword", hashedPassword);
-
+            userObject.password = hashedPassword
             userObject.newPassword = hashedPassword;
             userObject.confirmPassword = hashedPassword;
 
@@ -165,29 +165,37 @@ export const changePassword = async (req, res) => {
 export const updatePassword = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const userObject = await Signup.findOne(userId);
+        const userObject = await Signup.findById(userId);
 
         if (!userObject) {
-            res.status(401).json("User does not exist with this   id ")
+            return res.status(401).json("User does not exist with this id");
         }
 
-        const { newPassword, confirmPassword } = req.body;
+        const { password, newPassword, confirmPassword } = req.body;
 
-        if (newPassword != confirmPassword) {
+        const passwordMatch = await bcrypt.compare(password, userObject.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ message: "Invalid current Password" });
+        }
+
+        if (newPassword !== confirmPassword) {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        userObject.newPassword = hashedPassword;
-        userObject.confirmPassword = hashedPassword;
+        // Update only the password field
+        userObject.password = hashedPassword;
 
         await userObject.save();
-        res.status(200).json({ message: 'Password updated successfully' })
+        res.status(200).json({ message: 'Password updated successfully' });
+
     } catch (err) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: err.message });
     }
-}
+};
+
 
 // Logout 
 export const logOut = async (req, res) => {
