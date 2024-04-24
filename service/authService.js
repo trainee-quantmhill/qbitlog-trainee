@@ -14,9 +14,10 @@ export const _signUp = async (body) => {
 
         // Check if user with the provided email already exists
         const existingUser = await Signup.findOne({ email });
+
         console.log("existUser ",existingUser);
         if (existingUser) {          
-            return {message:'User with this email already exists'};
+            throw new ErrorHandler("User Exist With This Email",409)
         }
 
         console.log("password",password)
@@ -63,7 +64,7 @@ export const _login = async (existEmail, userEnteredPassword) => {
         console.log("passmathc",passwordMatch);
         
         if (!passwordMatch) {
-            return {message:"Invalid Username or Password"};
+            throw new ErrorHandler('Invalid Username or Password', 401);
         }
 
         const token = await existingUser.createJWT();
