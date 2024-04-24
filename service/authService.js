@@ -64,7 +64,7 @@ export const _login = async (existEmail, userEnteredPassword) => {
         console.log("passmathc",passwordMatch);
         
         if (!passwordMatch) {
-            throw new ErrorHandler('Invalid Username or Password', 401);
+            throw new ErrorHandler("User Exist With This Email",401)
         }
 
         const token = await existingUser.createJWT();
