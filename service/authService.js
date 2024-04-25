@@ -32,7 +32,10 @@ export const _signUp = async (body) => {
 
         // Create token
         const token = await user.createJWT();
+        user.token = token;
+        await user.save();
 
+        console.log("save Token",user.token);
         return {
             success: true,
             message: "User Created Successfully",
@@ -53,6 +56,7 @@ export const _login = async (existEmail, userEnteredPassword) => {
     try {
         // Find the user by email
         const existingUser = await Signup.findOne({ email: existEmail });
+        
 
         if (!existingUser) {
             throw new ErrorHandler("User with this email does not exist", 401);
@@ -69,6 +73,11 @@ export const _login = async (existEmail, userEnteredPassword) => {
         // Create JWT token for the authenticated user
         const token = await existingUser.createJWT();
 
+        //save token
+        existingUser.token=token;
+        await existingUser.save();
+        console.log("existingUser token ",existingUser.token);
+        
         return {
             success: true,
             message: 'Login Successful',
