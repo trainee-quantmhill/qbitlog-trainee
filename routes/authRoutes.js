@@ -7,7 +7,7 @@ const router = express.Router();
 
 //components
 import userAuth from '../middleware/userAuth.js'; //Middleware
-import { signUp ,login,sendMail,verifyEmail,changePassword,updatePassword} from '../controller/authController.js';
+import { signUp ,login,sendMail,verifyEmail,changePassword,updatePassword,logout} from '../controller/authController.js';
 
 router.post('/signup',signUp);
 
@@ -22,7 +22,7 @@ router.patch('/change-password', changePassword);
 router.patch('/update-password',userAuth, updatePassword);
 
 
-// router.get('/logout',userAuth);
+// router.get('/logout',userAuth,logout);
 
 
     

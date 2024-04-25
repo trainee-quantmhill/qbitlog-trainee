@@ -21,13 +21,8 @@ export const signUp = async (req, res) => {
 
 //login
 export const login = async (req, res) => {
-    try {
-         
-        const existEmail = req.body.email;
-        const userEnteredPassword = req.body.password;
-        
-         
-        const result = await _login(existEmail, userEnteredPassword);
+    try {       
+        const result = await _login(req.body.email, req.body.password);
         res.status(200).json(result);
     } catch (err) {
         console.error(err.message);
@@ -187,20 +182,20 @@ export const updatePassword = async (req, res) => {
 
 
 // Logout 
-// export const logOut = async (req, res) => {
-//     try {
-//         userId = req.user.userId;
-//         const existUser = await Signup.findById(userId);
+export const logout = async (req, res) => {
+    try {
+        userId = req.user.userId;
+        const existUser = await Signup.findById(userId);
          
         
-//         if (!existUser) {
-//             res.status(401).json("User NOt Found With  This ID");
-//         }
+        if (!existUser) {
+            res.status(401).json("User NOt Found With  This ID");
+        }
          
-//     } catch (err) {
+    } catch (err) {
 
-//     }
-// }
+    }
+}
 
 
 
